@@ -1,0 +1,19 @@
+client
+remote 34.237.94.57 34289
+proto udp
+dev tun
+
+persist-key
+persist-tun
+resolv-retry infinite
+nobind
+
+auth-user-pass
+
+#comp-lzo
+verb 3
+
+cipher AES-256-CBC
+
+# Informar a direcao da autenticacao tls
+key-direction 1

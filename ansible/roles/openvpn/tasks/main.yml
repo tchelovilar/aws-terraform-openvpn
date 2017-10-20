@@ -1,0 +1,81 @@
+---
+
+- name: Repositorio Epel
+  yum_repository:
+    name: epel
+    description: "Epel"
+    mirrorlist: https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=$basearch
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+    gpgcheck: yes
+    enabled: yes
+
+- name: Instalacao do Openvpn e Easy-rsa
+  yum:
+    name:
+      - easy-rsa
+      - openvpn
+    state: present
+
+
+###
+### Configuracao de Chaves Criptograficas
+- name: Arquivo com as configuracoes do Easy-rsa
+  template:
+    src: vars
+    dest: /etc/openvpn/vars
+
+- name: Verificar se a pasta de chaves já existe
+  stat: path=/etc/openvpn/keys/
+  register: openvpn_keys
+
+- name: Configuracao Certificados RSA
+  shell: |
+    test -d /etc/openvpn/key && exit 0
+    mkdir /etc/openvpn/keys/
+    source /etc/openvpn/vars
+    ./clean-all
+    ./build-ca --batch
+    ./build-dh
+    ./build-key-server --batch server
+    openvpn --genkey --secret /etc/openvpn/keys/ta.key
+  args:
+    chdir: "/usr/share/easy-rsa/2.0"
+  when: openvpn_keys.stat.exists == False
+
+
+###
+### Configuracoes Openvpn
+- name: Arquivo com as configuracoes do Openvpn
+  template:
+    src: server.conf
+    dest: /etc/openvpn/server.conf
+
+- name: Arquivo com as configuracoes do Openvpn Client
+  template:
+    src: client.conf.sample
+    dest: /etc/openvpn/client.conf.sample
+
+- name: Servico Openvpn
+  service:
+    name: openvpn
+    state: started
+    enabled: yes
+
+
+###
+### Configuracao de script para gerenciamento de usuarios do Openvpn
+- name: Criar pastas de Scripts
+  file:
+    path: /opt/scripts
+    state: directory
+
+- name: Script de gerenciamento de usuarios
+  template:
+    src: vpnuser.sh
+    dest: /opt/scripts/vpnuser.sh
+    mode: "u=rwx,g=r,o=r"
+
+- file:
+    src: /opt/scripts/vpnuser.sh
+    dest: /usr/bin/vpnuser
+    state: link

@@ -1,0 +1,58 @@
+
+export KEY_COUNTRY="BR" 
+export KEY_PROVINCE="SP"
+export KEY_CITY="Sao_Paulo"
+export KEY_ORG="Rivendel" 
+export KEY_EMAIL="rivendel@rivendel.com.br" 
+export KEY_OU="AWS"
+
+
+#
+export EASY_RSA="`pwd`"
+
+# This variable should point to
+# the requested executables
+export OPENSSL="openssl"
+export PKCS11TOOL="pkcs11-tool"
+export GREP="grep"
+
+
+# This variable should point to
+# the openssl.cnf file included
+# with easy-rsa.
+export KEY_CONFIG=`$EASY_RSA/whichopensslcnf $EASY_RSA`
+
+# Edit this variable to point to
+# your soon-to-be-created key
+# directory.
+#export KEY_DIR="$EASY_RSA/keys"
+export KEY_DIR="/etc/openvpn/keys"
+
+# PKCS11 fixes
+export PKCS11_MODULE_PATH="dummy"
+export PKCS11_PIN="dummy"
+
+# Increase this to 2048 if you
+# are paranoid.  This will slow
+# down TLS negotiation performance
+# as well as the one-time DH parms
+# generation process.
+export KEY_SIZE=2048
+
+# In how many days should the root CA key expire?
+export CA_EXPIRE=3650
+
+# In how many days should certificates expire?
+export KEY_EXPIRE=3650
+
+
+# X509 Subject Field
+export KEY_NAME="EasyRSA"
+
+# PKCS11 Smart Card
+# export PKCS11_MODULE_PATH="/usr/lib/changeme.so"
+# export PKCS11_PIN=1234
+
+# If you'd like to sign all keys with the same Common Name, uncomment the KEY_CN export below
+# You will also need to make sure your OpenVPN server config has the duplicate-cn option set
+# export KEY_CN="CommonName"

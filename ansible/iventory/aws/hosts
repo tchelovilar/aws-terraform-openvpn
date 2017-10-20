@@ -1,0 +1,10 @@
+##
+[tag_Role_openvpn]
+
+
+[tag_Role_openvpn:vars]
+  ansible_user=ec2-user
+  ansible_port=42000
+
+[openvpn:children]
+  tag_Role_openvpn
