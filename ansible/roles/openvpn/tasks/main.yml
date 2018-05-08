@@ -1,5 +1,8 @@
 ---
 
+# - name: Debug teste
+#   debug: msg="{{groups.openvpn[0]}}"
+
 - name: Repositorio Epel
   yum_repository:
     name: epel
@@ -30,16 +33,15 @@
 
 - name: Configuracao Certificados RSA
   shell: |
-    test -d /etc/openvpn/key && exit 0
-    mkdir /etc/openvpn/keys/
+    test -d /etc/openvpn/keys && exit 0
     source /etc/openvpn/vars
-    ./clean-all
-    ./build-ca --batch
-    ./build-dh
-    ./build-key-server --batch server
+    ./easyrsa init-pki
+    ./easyrsa --batch build-ca nopass
+    ./easyrsa gen-dh
+    ./easyrsa build-server-full server nopass
     openvpn --genkey --secret /etc/openvpn/keys/ta.key
   args:
-    chdir: "/usr/share/easy-rsa/2.0"
+    chdir: "/usr/share/easy-rsa/3"
   when: openvpn_keys.stat.exists == False
 
 
@@ -79,3 +81,25 @@
     src: /opt/scripts/vpnuser.sh
     dest: /usr/bin/vpnuser
     state: link
+
+
+
+- name: Configuracao do nat
+  lineinfile:
+    path: /etc/rc.local
+    line: '/sbin/iptables -t nat -I POSTROUTING -d {{ network }} -j MASQUERADE'
+
+- name: Liberacao de encaminhamento
+  lineinfile:
+    path: /etc/sysctl.conf
+    regexp: "^net.ipv4.ip_forward"
+    line: 'net.ipv4.ip_forward = 1'
+
+- name: Aplicar configuracoes de nat e encaminhamento
+  shell: |
+    /etc/rc.local
+    /sbin/sysctl -p
+
+
+##
+## sysctl net.ipv4.ip_forward=1

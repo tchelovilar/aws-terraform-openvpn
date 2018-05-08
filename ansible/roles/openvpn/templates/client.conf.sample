@@ -1,5 +1,5 @@
 client
-remote 34.237.94.57 34289
+remote {{ openvpn_ip }} {{ openvpn_port }}
 proto udp
 dev tun
 

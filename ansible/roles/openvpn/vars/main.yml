@@ -1,0 +1,19 @@
+---
+
+
+# Configuracoes da VPC
+network: 10.1.0.0/16
+network_mask: "10.1.0.0 255.255.0.0"
+
+
+# Configuracoes do Openvpn
+openvpn_ip: 35.171.213.19
+openvpn_port: 34289
+
+
+certificado:
+  KEY_COUNTRY: "BR"
+  KEY_PROVINCE: "SP"
+  KEY_CITY: "Sao_Paulo"
+  KEY_ORG: "Rivendel"
+  KEY_EMAIL: "rivendel@rivendel.com.br"

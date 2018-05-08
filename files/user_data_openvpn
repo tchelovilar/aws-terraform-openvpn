@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo -e "\nPort ${SSH_PORT}" >> /etc/ssh/sshd_config
+echo -e "\nPort 22\nPort ${SSH_PORT}" >> /etc/ssh/sshd_config
 
 /etc/init.d/sshd restart

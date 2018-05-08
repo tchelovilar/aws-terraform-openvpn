@@ -19,7 +19,6 @@
  * Chave pública para acesso a instância
 
 
-
 ## Como usar ##
 
 ### Configuração do Ambiente ###
@@ -48,22 +47,15 @@ ssh-add <arquivo>
 ```
 
 
-**Exportar chaves de acesso da AWS para o Terraform**
-Exporte as variáveis do Terraform para acesso a conta da AWS.
-```
-export TF_VAR_aws_access_key="valor"
-export TF_VAR_aws_secret_key="valor"
-```
 
-
-**Configurar chaves de acesso para API da AWS**
+**Configurar chaves de acesso para API da AWS e Terraform**
 Usando as mesmas chaves do passo anterior, faça a configuração de acesso do AWS cli:
 ```
 aws configure
 ```
 
 
-### Executar a bagaça toda ###
+### Executar a instalação ###
 Tendo executado os passos anteriores e estando o arquivo `variables.tf` devidamente
 configurado, primeiramente execute o `plan` do Terraform para que seja validada as
 configurações e verificar as alterações a serem realizadas:
@@ -89,3 +81,11 @@ para conexão:
 ```
 vpnuser create <nome_do_usuario>
 ```
+
+
+# TODO
+
+* Ajustar a parte de revogação, para remover os usuários
+* Mudar a criação do certificado para um CN diferente do nome, registando esse
+  nas informações do usuário Linux, para caso precise recriar o certificado.
+* Página web para alteração de senha.
